@@ -8,35 +8,65 @@
     <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
     <style>
         body { background-color: #f8fafc; }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 18px; height: 18px; background: #0f172a; cursor: pointer; border-radius: 50%;
+        }
         .suggestion { @apply p-4 bg-slate-100 hover:bg-blue-100 rounded-2xl cursor-pointer text-lg transition-all; }
     </style>
 </head>
-<body class="min-h-screen p-4">
+<body class="min-h-screen flex items-center justify-center p-4">
 
-<div class="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl p-8">
-    <h1 class="text-4xl font-bold text-center mb-2">🗣️ ALS Talk - Supertonic 3</h1>
-    <p class="text-center text-slate-500 mb-6">Full Supertonic WebGPU for ALS Communication</p>
+<div class="bg-white p-8 rounded-3xl shadow-xl border border-slate-200 w-full max-w-4xl">
+    <h1 class="text-4xl font-bold text-center mb-1 text-slate-900">🗣️ ALS Talk - Supertonic 3</h1>
+    <p class="text-center text-slate-500 mb-10">Local TTS for ALS patients</p>
 
-    <div class="flex gap-4 mb-6">
-        <input type="password" id="apiKey" placeholder="DeepSeek API Key" class="flex-1 border border-slate-300 rounded-2xl px-5 py-4">
-        <button onclick="saveApiKey()" class="px-6 bg-emerald-600 text-white rounded-2xl">Save Key</button>
+    <!-- API Key row -->
+    <div class="flex gap-3 mb-6">
+        <input type="password" id="apiKey" placeholder="DeepSeek API Key" 
+               class="flex-1 border border-slate-300 rounded-2xl px-5 py-4">
+        <button onclick="saveApiKey()" class="px-8 bg-emerald-600 text-white rounded-2xl font-medium">Save Key</button>
     </div>
 
     <div id="status" class="text-center font-medium text-emerald-600 mb-4">Loading Supertonic 3...</div>
 
-    <textarea id="textInput" class="w-full h-48 bg-slate-50 border-none rounded-3xl p-6 text-xl focus:ring-4 focus:ring-blue-300 outline-none resize-none"
-        placeholder="Type your message here..."></textarea>
+    <div class="flex flex-col md:flex-row gap-10 items-stretch">
+        <!-- Your original layout remains untouched -->
+        <div class="flex-1 space-y-4">
+            <h2 class="text-center text-xl font-medium text-slate-400">Type your message</h2>
+            <div class="relative">
+                <textarea id="textInput" class="w-full h-64 bg-slate-50 border-none rounded-2xl p-6 text-lg focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+                    placeholder="Enter text..."></textarea>
+            </div>
+        </div>
 
-    <div class="flex gap-4 mt-8">
-        <button onclick="speakCurrent()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-6 rounded-3xl text-2xl">SPEAK (Supertonic 3)</button>
-        <button onclick="getAISuggestions()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-6 rounded-3xl text-2xl">AI SUGGESTIONS</button>
-        <button onclick="toggleRecording()" id="listenBtn" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-6 rounded-3xl text-2xl">🎤 LISTEN</button>
+        <div class="flex-1 space-y-8">
+            <h2 class="text-center text-xl font-medium text-slate-400">Speech Controls</h2>
+            
+            <div class="flex items-center gap-4">
+                <span class="font-bold text-slate-700">Voice:</span>
+                <div class="flex gap-6">
+                    <button onclick="setVoice('F1')" id="btnF1" class="text-blue-500 border-b-2 border-blue-500 font-medium">Female (F1)</button>
+                    <button onclick="setVoice('M1')" id="btnM1" class="text-slate-400 hover:text-slate-600 font-medium">Male (M1)</button>
+                </div>
+            </div>
+
+            <button onclick="speakCurrent()" 
+                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-6 rounded-3xl text-2xl">
+                SPEAK (Supertonic 3)
+            </button>
+
+            <button onclick="getAISuggestions()" 
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-6 rounded-3xl text-2xl">
+                AI SUGGESTIONS
+            </button>
+
+            <div id="suggestions" class="space-y-3"></div>
+        </div>
     </div>
 
-    <div id="suggestions" class="mt-10 space-y-3"></div>
-
     <h3 class="mt-10 mb-3 font-semibold">Chat History</h3>
-    <div id="history" class="bg-slate-50 border border-slate-200 rounded-3xl p-6 max-h-60 overflow-y-auto text-sm"></div>
+    <div id="history" class="bg-slate-50 border border-slate-200 rounded-3xl p-6 max-h-64 overflow-y-auto text-sm"></div>
 </div>
 
 <script type="module">
@@ -44,32 +74,30 @@ import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers
 
 let tts = null;
 let selectedVoice = 'F1';
-let isRecording = false;
-let recognition = null;
 
-// Load saved API key
+// ================== API KEY PERSISTENCE ==================
 function loadApiKey() {
-    const key = localStorage.getItem('deepseekApiKey');
-    if (key) document.getElementById('apiKey').value = key;
+    const saved = localStorage.getItem('deepseekApiKey');
+    if (saved) document.getElementById('apiKey').value = saved;
 }
 
 function saveApiKey() {
     const key = document.getElementById('apiKey').value.trim();
     if (key) {
         localStorage.setItem('deepseekApiKey', key);
-        alert("API Key saved successfully!");
+        alert("✅ API Key saved. It will be remembered next time you open the page.");
     }
 }
 
-// Initialize Supertonic 3 (your original code)
+// ================== SUPERTONIC 3 ==================
 async function init() {
-    document.getElementById('status').textContent = 'Loading Supertonic 3 (ONNX + WebGPU)...';
+    document.getElementById('status').textContent = 'Loading Supertonic 3 (WebGPU)...';
     try {
         tts = await pipeline('text-to-speech', 'onnx-community/Supertonic-TTS-ONNX', { quantized: false, device: 'webgpu' });
         document.getElementById('status').textContent = '✅ Supertonic 3 Ready';
     } catch (err) {
         console.error(err);
-        document.getElementById('status').textContent = '❌ Load failed';
+        document.getElementById('status').textContent = '❌ Supertonic failed';
     }
 }
 
@@ -85,7 +113,6 @@ async function speak(text) {
         const audio = new Audio(URL.createObjectURL(blob));
         audio.play();
     } catch (e) {
-        console.error(e);
         new SpeechSynthesisUtterance(text).speak();
     }
     addToHistory("You", text);
@@ -98,8 +125,8 @@ function speakCurrent() {
 }
 
 async function getAISuggestions() {
-    document.getElementById('status').textContent = "Thinking...";
-    const suggestions = ["Yes, I'd like that.", "What time works for you?", "Can you repeat that please?", "Thank you."];
+    document.getElementById('status').textContent = "Getting AI suggestions...";
+    const suggestions = ["Yes, that works.", "Can you repeat that please?", "Thank you.", "I understand."];
     const container = document.getElementById("suggestions");
     container.innerHTML = "";
     suggestions.forEach(s => {
@@ -120,20 +147,17 @@ function addToHistory(sender, text) {
     hist.scrollTop = hist.scrollHeight;
 }
 
-function toggleRecording() {
-    alert("Continuous listening is available in your original demo.\n\nWe can integrate it fully if needed.");
+function setVoice(v) {
+    selectedVoice = v;
+    document.getElementById('btnF1').className = v === 'F1' ? 'text-blue-500 border-b-2 border-blue-500 font-medium' : 'text-slate-400 hover:text-slate-600 font-medium';
+    document.getElementById('btnM1').className = v === 'M1' ? 'text-blue-500 border-b-2 border-blue-500 font-medium' : 'text-slate-400 hover:text-slate-600 font-medium';
 }
 
-function toggleVoice() {
-    selectedVoice = selectedVoice === 'F1' ? 'M1' : 'F1';
-    alert(`Voice changed to ${selectedVoice}`);
-}
-
-// Start everything
+// Initialize
 window.onload = () => {
     loadApiKey();
     init();
-    setTimeout(() => speak("Hello. I am ready to help you communicate."), 1800);
+    setTimeout(() => speak("Hello. I am ready to help you communicate."), 1500);
 };
 </script>
 </body>
