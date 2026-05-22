@@ -2,202 +2,400 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AAC Pro - Advanced Communication Assistant</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>AAC Pro - Voice Communication</title>
     <style>
         :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f1f5f9;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --danger: #ef4444;
-            --success: #10b981;
-            --warning: #f59e0b;
+            --bg: #ffffff;
+            --bg2: #f8fafc;
+            --bg3: #f1f5f9;
+            --text: #0f172a;
+            --text2: #475569;
+            --text3: #94a3b8;
             --border: #e2e8f0;
-            --button-size: 56px;
+            --accent: #3b82f6;
+            --accent2: #2563eb;
+            --green: #10b981;
+            --green2: #059669;
+            --red: #ef4444;
+            --red2: #dc2626;
+            --yellow: #f59e0b;
+            --purple: #8b5cf6;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --radius: 12px;
         }
 
         .dark {
-            --bg-primary: #1e293b;
-            --bg-secondary: #0f172a;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --border: #334155;
+            --bg: #0f172a;
+            --bg2: #1e293b;
+            --bg3: #334155;
+            --text: #f1f5f9;
+            --text2: #cbd5e1;
+            --text3: #94a3b8;
+            --border: #475569;
         }
 
         .high-contrast {
-            --bg-primary: #000000;
-            --bg-secondary: #1a1a1a;
-            --text-primary: #ffffff;
-            --text-secondary: #ffff00;
-            --accent: #00ffff;
+            --bg: #000000;
+            --bg2: #111111;
+            --bg3: #222222;
+            --text: #ffffff;
+            --text2: #ffff00;
+            --text3: #00ffff;
             --border: #ffffff;
+            --accent: #00ffff;
+            --accent2: #00cccc;
+            --green: #00ff00;
+            --green2: #00cc00;
+            --red: #ff0000;
+            --red2: #cc0000;
+            --yellow: #ffff00;
+            --purple: #ff00ff;
+            --shadow: 0 0 0 2px #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            transition: all 0.3s ease;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
             user-select: none;
             -webkit-user-select: none;
-            touch-action: manipulation;
-        }
-
-        .btn-touch {
-            min-height: 56px;
-            min-width: 56px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 16px;
-            transition: all 0.15s ease;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
             -webkit-tap-highlight-color: transparent;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            touch-action: manipulation;
+            font-size: 14px;
         }
 
-        .btn-touch:active {
+        #app {
+            display: grid;
+            grid-template-rows: auto auto 1fr auto;
+            height: 100vh;
+            height: 100dvh;
+            padding: 8px;
+            gap: 8px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .top-bar {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .top-bar h1 {
+            font-size: 1.2em;
+            font-weight: 700;
+            white-space: nowrap;
+            margin-right: auto;
+        }
+
+        .icon-btn {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            min-height: 36px;
+        }
+
+        .icon-btn:active {
             transform: scale(0.95);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            filter: brightness(0.9);
         }
 
-        .btn-touch::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
+        .emergency-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 6px;
         }
 
-        .btn-touch:active::after {
-            width: 300px;
-            height: 300px;
+        .emergency-btn {
+            background: var(--red);
+            color: white;
+            border: 2px solid var(--red2);
+            padding: 10px 8px;
+            border-radius: var(--radius);
+            font-weight: 700;
+            font-size: 0.8em;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.1s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .emergency-btn:active {
+            transform: scale(0.95);
+            filter: brightness(1.2);
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr 300px;
+            gap: 8px;
+            min-height: 0;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr auto;
+                overflow-y: auto;
+            }
+            #app {
+                overflow-y: auto;
+            }
+        }
+
+        .panel {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .panel-title {
+            font-weight: 700;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            color: var(--text2);
+            flex-shrink: 0;
+        }
+
+        .category-scroll {
+            display: flex;
+            gap: 4px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            flex-shrink: 0;
+            margin-bottom: 8px;
+            -webkit-overflow-scrolling: touch;
         }
 
         .category-btn {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            border: 2px solid var(--border);
-            padding: 16px;
-            font-size: 1.1rem;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
             font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.1s;
+            flex-shrink: 0;
         }
 
         .category-btn.active {
             background: var(--accent);
             color: white;
-            border-color: var(--accent);
-            transform: scale(1.02);
+            border-color: var(--accent2);
         }
 
-        .phrase-btn {
-            background: white;
-            border: 2px solid var(--border);
-            padding: 14px 18px;
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--text-primary);
-            text-align: left;
-            width: 100%;
-            margin-bottom: 8px;
-        }
-
-        .phrase-btn:active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        .phrase-btn.favorite {
-            border-left: 4px solid #f59e0b;
-        }
-
-        .emergency-btn {
-            background: #ef4444;
-            color: white;
-            border: 2px solid #dc2626;
-            font-weight: 700;
-            font-size: 1rem;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-            50% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
-        }
-
-        .slider-container {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-        }
-
-        input[type="range"] {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 8px;
-            background: var(--border);
-            border-radius: 4px;
-            outline: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 36px;
-            height: 36px;
-            background: var(--accent);
-            border-radius: 50%;
-            cursor: pointer;
-            border: 3px solid white;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-        }
-
-        .voice-selector {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .voice-option {
+        .phrases-list {
+            overflow-y: auto;
             flex: 1;
-            min-width: 100px;
-            padding: 12px;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            font-weight: 500;
-            transition: all 0.2s;
+            min-height: 0;
+            -webkit-overflow-scrolling: touch;
         }
 
-        .voice-option.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        .history-item {
-            padding: 12px;
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            margin-bottom: 8px;
+        .phrase-item {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 10px 12px;
+            border-radius: var(--radius);
+            margin-bottom: 4px;
             cursor: pointer;
-            transition: all 0.2s;
+            font-size: 0.85em;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: all 0.1s;
+            gap: 8px;
+        }
+
+        .phrase-item:active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .phrase-item.favorite {
+            border-left: 3px solid var(--yellow);
+        }
+
+        .phrase-text {
+            flex: 1;
+            min-width: 0;
+            word-break: break-word;
+        }
+
+        .star-btn {
+            font-size: 1.2em;
+            cursor: pointer;
+            flex-shrink: 0;
+            padding: 4px;
+            background: none;
+            border: none;
+            color: inherit;
+        }
+
+        .center-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-height: 0;
+        }
+
+        .text-area-wrap {
+            position: relative;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #textInput {
+            width: 100%;
+            flex: 1;
+            min-height: 80px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px;
+            color: var(--text);
+            font-size: 1em;
+            resize: none;
+            font-family: inherit;
+            outline: none;
+        }
+
+        #textInput:focus {
+            border-color: var(--accent);
+        }
+
+        .predictions-row {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            padding: 4px 0;
+        }
+
+        .pred-btn {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .action-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: var(--radius);
+            font-weight: 700;
+            font-size: 0.9em;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.1s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.96);
+            filter: brightness(0.85);
+        }
+
+        .btn-green {
+            background: var(--green);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: var(--radius);
+            font-weight: 700;
+            font-size: 1em;
+            cursor: pointer;
+            grid-column: 1 / -1;
+            transition: all 0.1s;
+        }
+
+        .btn-green:active {
+            transform: scale(0.96);
+            filter: brightness(0.85);
+        }
+
+        .quick-words {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .word-chip {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .history-list {
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .history-item {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 8px 10px;
+            border-radius: var(--radius);
+            margin-bottom: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.1s;
         }
 
         .history-item:active {
@@ -205,582 +403,931 @@
             color: white;
         }
 
-        .favorite-star {
-            font-size: 1.5rem;
+        .delete-btn {
+            color: var(--red);
             cursor: pointer;
-            transition: transform 0.2s;
+            padding: 2px 6px;
+            background: none;
+            border: none;
+            font-size: 1.1em;
+            flex-shrink: 0;
         }
 
-        .favorite-star:active {
-            transform: scale(1.3);
+        .status-bar {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 6px 12px;
+            font-size: 0.75em;
+            text-align: center;
+            color: var(--text2);
+            flex-shrink: 0;
         }
 
+        /* Modals */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
+            inset: 0;
+            background: rgba(0,0,0,0.6);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(2px);
         }
 
         .modal {
-            background: var(--bg-primary);
-            border-radius: 20px;
-            padding: 24px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            width: 95%;
             max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal h2 {
+            font-size: 1.2em;
+            margin-bottom: 16px;
+        }
+
+        .setting-group {
+            margin-bottom: 12px;
+        }
+
+        .setting-group label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 0.85em;
+            margin-bottom: 4px;
+        }
+
+        .setting-group input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .setting-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+        }
+
+        .setting-group input[type="password"],
+        .setting-group input[type="text"],
+        .setting-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--bg2);
+            color: var(--text);
+            font-size: 0.85em;
+            outline: none;
+        }
+
+        .fine-tune-btns {
+            display: flex;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .fine-tune-btn {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 4px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+
+        .voice-engine-option {
+            background: var(--bg2);
+            border: 2px solid var(--border);
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 0.85em;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .voice-engine-option.active {
+            border-color: var(--accent);
+            background: var(--bg3);
+        }
+
+        .modal-btns {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .modal-btns button {
+            flex: 1;
+            padding: 10px;
+            border-radius: var(--radius);
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            font-size: 0.9em;
         }
 
         .toast {
             position: fixed;
-            bottom: 20px;
+            bottom: 16px;
             left: 50%;
             transform: translateX(-50%);
-            background: #10b981;
+            background: var(--green);
             color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
+            padding: 10px 20px;
+            border-radius: 25px;
             font-weight: 600;
+            font-size: 0.85em;
             z-index: 2000;
-            animation: slideUp 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            animation: toastIn 0.3s ease;
+            white-space: nowrap;
         }
 
-        @keyframes slideUp {
-            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+        @keyframes toastIn {
+            from { transform: translateX(-50%) translateY(20px); opacity: 0; }
             to { transform: translateX(-50%) translateY(0); opacity: 1; }
-        }
-
-        .typing-indicator {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--accent);
-            animation: typing 1.4s infinite;
-            margin: 0 2px;
-        }
-
-        .typing-indicator:nth-child(2) { animation-delay: 0.2s; }
-        .typing-indicator:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes typing {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-10px); }
-        }
-
-        @media (max-width: 768px) {
-            .btn-touch { font-size: 0.95rem; min-height: 48px; }
-            .phrase-btn { font-size: 0.9rem; padding: 12px 14px; }
         }
     </style>
 </head>
-<body class="min-h-screen">
+<body>
 
-<div id="app" class="max-w-7xl mx-auto p-3 md:p-6">
-    <!-- Header -->
-    <div class="flex flex-wrap justify-between items-center mb-4 gap-3">
-        <h1 class="text-3xl md:text-4xl font-bold">💬 AAC Pro</h1>
-        <div class="flex gap-2 flex-wrap">
-            <button onclick="toggleHighContrast()" class="btn-touch bg-yellow-500 text-black px-4 py-2">
-                ◐ Contrast
-            </button>
-            <button onclick="toggleDarkMode()" class="btn-touch bg-gray-700 text-white px-4 py-2">
-                🌙 Dark
-            </button>
-            <button onclick="openSettings()" class="btn-touch bg-blue-600 text-white px-4 py-2">
-                ⚙️ Settings
-            </button>
-        </div>
+<div id="app">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <h1>💬 AAC Pro</h1>
+        <button onclick="toggleDark()" class="icon-btn" title="Dark Mode">🌓</button>
+        <button onclick="toggleContrast()" class="icon-btn" title="High Contrast">◐</button>
+        <button onclick="openSettings()" class="icon-btn" title="Settings">⚙️</button>
+        <span class="status-bar" style="flex:1;min-width:100px;" id="statusText">🟢 Ready</span>
     </div>
 
-    <!-- Status Bar -->
-    <div id="statusBar" class="bg-blue-50 dark:bg-blue-900 p-3 rounded-xl mb-4 text-center font-medium text-sm">
-        🟢 System Ready
+    <!-- Emergency Bar -->
+    <div class="emergency-bar">
+        <button onclick="speak('I need help immediately')" class="emergency-btn">🆘 HELP</button>
+        <button onclick="speak('I am in pain')" class="emergency-btn">🔴 Pain</button>
+        <button onclick="speak('I need the bathroom')" class="emergency-btn">🚽 Bathroom</button>
+        <button onclick="speak('Call my caregiver please')" class="emergency-btn">📞 Caregiver</button>
     </div>
 
-    <!-- Emergency Phrase Bar (Always Visible) -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
-        <button onclick="speakPhrase('I need help immediately')" class="btn-touch emergency-btn p-3">
-            🆘 I NEED HELP
-        </button>
-        <button onclick="speakPhrase('I am in pain')" class="btn-touch emergency-btn p-3">
-            🔴 I'm in pain
-        </button>
-        <button onclick="speakPhrase('I need the bathroom')" class="btn-touch emergency-btn p-3">
-            🚽 Bathroom
-        </button>
-        <button onclick="speakPhrase('Call my caregiver')" class="btn-touch emergency-btn p-3">
-            📞 Call caregiver
-        </button>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <!-- Left Column: Categories & Phrases -->
-        <div class="lg:col-span-1 space-y-3">
-            <div class="flex gap-2 overflow-x-auto pb-2">
-                <button onclick="selectCategory('greetings')" class="category-btn btn-touch active" data-category="greetings">
-                    👋 Greetings
-                </button>
-                <button onclick="selectCategory('needs')" class="category-btn btn-touch" data-category="needs">
-                    🎯 Needs
-                </button>
-                <button onclick="selectCategory('feelings')" class="category-btn btn-touch" data-category="feelings">
-                    💭 Feelings
-                </button>
-                <button onclick="selectCategory('questions')" class="category-btn btn-touch" data-category="questions">
-                    ❓ Questions
-                </button>
-                <button onclick="selectCategory('medical')" class="category-btn btn-touch" data-category="medical">
-                    🏥 Medical
-                </button>
-                <button onclick="selectCategory('social')" class="category-btn btn-touch" data-category="social">
-                    💬 Social
-                </button>
-            </div>
-
-            <div id="phrasesContainer" class="space-y-2 max-h-96 overflow-y-auto p-2">
-                <!-- Phrases loaded dynamically -->
-            </div>
-
-            <button onclick="openCustomPhraseModal()" class="btn-touch bg-purple-600 text-white w-full p-4">
-                ✏️ Create Custom Phrase
-            </button>
+    <!-- Main Grid -->
+    <div class="main-grid">
+        <!-- Left: Categories & Phrases -->
+        <div class="panel">
+            <div class="category-scroll" id="categoryBar"></div>
+            <div class="phrases-list" id="phrasesList"></div>
+            <button onclick="openCustomPhraseModal()" class="icon-btn" style="margin-top:6px;justify-content:center;">✏️ New Phrase</button>
         </div>
 
-        <!-- Center: Text Input & AI Features -->
-        <div class="lg:col-span-1 space-y-3">
-            <div class="relative">
-                <textarea id="textInput" 
-                    class="w-full h-32 p-4 rounded-2xl border-2 text-lg resize-none focus:outline-none focus:border-blue-500"
-                    style="background: var(--bg-secondary); color: var(--text-primary); border-color: var(--border);"
-                    placeholder="Type or build your message..."
-                    oninput="onTextInput()"></textarea>
-                
-                <div id="predictionBox" class="absolute bottom-2 left-2 right-2 flex gap-1 flex-wrap"></div>
+        <!-- Center: Text & Actions -->
+        <div class="center-panel">
+            <div class="text-area-wrap">
+                <textarea id="textInput" placeholder="Type or build your message..."></textarea>
+                <div class="predictions-row" id="predictions"></div>
             </div>
-
-            <div class="grid grid-cols-2 gap-2">
-                <button onclick="speakCurrent()" class="btn-touch bg-green-600 text-white p-4 text-lg font-bold">
-                    🔊 SPEAK
-                </button>
-                <button onclick="clearText()" class="btn-touch bg-gray-500 text-white p-4">
-                    🗑️ Clear
-                </button>
-            </div>
-
-            <button onclick="getAISuggestions()" class="btn-touch bg-blue-600 text-white w-full p-4 text-lg font-bold">
-                🤖 AI Suggestions
-            </button>
-
-            <button onclick="toggleConversationMode()" class="btn-touch bg-indigo-600 text-white w-full p-4" id="conversationBtn">
-                💭 Conversation Mode: OFF
-            </button>
-
-            <div id="aiSuggestions" class="space-y-2 max-h-48 overflow-y-auto"></div>
-
-            <!-- Quick word builder -->
-            <div class="bg-gray-100 dark:bg-gray-800 p-3 rounded-xl">
-                <h3 class="font-semibold mb-2 text-sm">Quick Builder</h3>
-                <div class="flex gap-2 flex-wrap">
-                    <button onclick="appendWord('I')" class="btn-touch bg-white dark:bg-gray-700 px-3 py-2">I</button>
-                    <button onclick="appendWord('want')" class="btn-touch bg-white dark:bg-gray-700 px-3 py-2">want</button>
-                    <button onclick="appendWord('need')" class="btn-touch bg-white dark:bg-gray-700 px-3 py-2">need</button>
-                    <button onclick="appendWord('feel')" class="btn-touch bg-white dark:bg-gray-700 px-3 py-2">feel</button>
-                    <button onclick="appendWord('please')" class="btn-touch bg-white dark:bg-gray-700 px-3 py-2">please</button>
-                    <button onclick="appendWord('thank you')" class="btn-touch bg-white dark:bg-gray-700 px-3 py-2">thank you</button>
-                    <button onclick="appendWord('yes')" class="btn-touch bg-white dark:bg-gray-700 px-3 py-2">yes</button>
-                    <button onclick="appendWord('no')" class="btn-touch bg-white dark:bg-gray-700 px-3 py-2">no</button>
-                </div>
+            <div class="quick-words" id="quickWords"></div>
+            <div class="action-btns">
+                <button onclick="speakCurrent()" class="btn-green">🔊 SPEAK</button>
+                <button onclick="getAISuggestions()" class="btn-primary">🤖 AI Suggest</button>
+                <button onclick="clearText()" class="btn-primary">🗑️ Clear</button>
             </div>
         </div>
 
-        <!-- Right Column: History & Favorites -->
-        <div class="lg:col-span-1 space-y-3">
-            <div class="flex justify-between items-center">
-                <h3 class="font-bold text-lg">📝 History</h3>
-                <div class="flex gap-2">
-                    <button onclick="showFavorites()" class="btn-touch bg-yellow-500 text-white px-3 py-1 text-sm">
-                        ⭐ Favorites
-                    </button>
-                    <button onclick="clearHistory()" class="btn-touch bg-red-500 text-white px-3 py-1 text-sm">
-                        🗑️ Clear
-                    </button>
-                </div>
+        <!-- Right: History -->
+        <div class="panel">
+            <div style="display:flex;gap:4px;flex-shrink:0;margin-bottom:6px;">
+                <span class="panel-title" style="flex:1;">📝 History</span>
+                <button onclick="toggleFavorites()" class="icon-btn" style="padding:4px 8px;font-size:0.7em;">⭐</button>
+                <button onclick="clearHistory()" class="icon-btn" style="padding:4px 8px;font-size:0.7em;">🗑️</button>
             </div>
-            <div id="historyContainer" class="space-y-2 max-h-96 overflow-y-auto"></div>
+            <div class="history-list" id="historyList"></div>
         </div>
-    </div>
-
-    <!-- Voice Controls Bar -->
-    <div class="mt-4 p-4 rounded-2xl" style="background: var(--bg-secondary);">
-        <h3 class="font-bold mb-3">🎤 Voice Settings</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="slider-container">
-                <label class="text-sm font-medium">Speed: <span id="speedValue">1.0x</span></label>
-                <input type="range" id="speedSlider" min="0.5" max="2" step="0.1" value="1" oninput="updateSpeed()">
-            </div>
-            <div class="slider-container">
-                <label class="text-sm font-medium">Pitch: <span id="pitchValue">1.0</span></label>
-                <input type="range" id="pitchSlider" min="0.5" max="2" step="0.1" value="1" oninput="updatePitch()">
-            </div>
-            <div class="slider-container">
-                <label class="text-sm font-medium">Volume: <span id="volumeValue">100%</span></label>
-                <input type="range" id="volumeSlider" min="0" max="100" value="80" oninput="updateVolume()">
-            </div>
-            <div>
-                <label class="text-sm font-medium mb-2 block">Voice:</label>
-                <div class="voice-selector">
-                    <div class="voice-option active" onclick="selectVoice('F1')" data-voice="F1">👩 Female 1</div>
-                    <div class="voice-option" onclick="selectVoice('F2')" data-voice="F2">👩 Female 2</div>
-                    <div class="voice-option" onclick="selectVoice('M1')" data-voice="M1">👨 Male 1</div>
-                </div>
-            </div>
-        </div>
-        <button onclick="testVoice()" class="btn-touch bg-blue-500 text-white px-6 py-2 mt-3">
-            🔊 Test Voice
-        </button>
     </div>
 </div>
 
 <!-- Settings Modal -->
-<div id="settingsModal" class="modal-overlay" style="display: none;">
+<div id="settingsModal" class="modal-overlay" style="display:none;">
     <div class="modal">
-        <h2 class="text-2xl font-bold mb-4">⚙️ Settings</h2>
+        <h2>⚙️ Settings</h2>
         
-        <div class="space-y-4">
-            <div>
-                <label class="font-semibold block mb-2">DeepSeek API Key</label>
-                <input type="password" id="apiKeyInput" class="w-full p-3 rounded-xl border-2" 
-                    style="background: var(--bg-secondary); color: var(--text-primary); border-color: var(--border);"
-                    placeholder="Enter your API key">
-            </div>
-            
-            <div class="flex items-center justify-between">
-                <span class="font-semibold">Auto-Speak on Select</span>
-                <input type="checkbox" id="autoSpeakToggle" class="w-6 h-6">
-            </div>
-            
-            <div class="flex items-center justify-between">
-                <span class="font-semibold">Haptic Feedback</span>
-                <input type="checkbox" id="hapticToggle" checked class="w-6 h-6">
-            </div>
-            
-            <div>
-                <label class="font-semibold block mb-2">Text Size</label>
-                <select id="textSizeSelect" class="w-full p-3 rounded-xl border-2"
-                    style="background: var(--bg-secondary); color: var(--text-primary); border-color: var(--border);">
-                    <option value="normal">Normal</option>
-                    <option value="large">Large</option>
-                    <option value="xlarge">Extra Large</option>
-                </select>
+        <div class="setting-group">
+            <label>DeepSeek API Key</label>
+            <input type="password" id="apiKeyInput" placeholder="sk-...">
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px;">
+            <div class="voice-engine-option active" onclick="setEngine('browser')" data-engine="browser">🌐 Browser</div>
+            <div class="voice-engine-option" onclick="setEngine('supertonic')" data-engine="supertonic">🎵 Supertonic</div>
+            <div class="voice-engine-option" onclick="setEngine('google')" data-engine="google">🔊 Google</div>
+        </div>
+
+        <div class="setting-group">
+            <label>Voice <span id="voiceLabel">Female 1</span></label>
+            <select id="voiceSelect" onchange="updateVoice()"></select>
+        </div>
+
+        <div class="setting-group">
+            <label>Speed: <span id="speedVal">1.00x</span></label>
+            <input type="range" id="speedSlider" min="0.25" max="4" step="0.01" value="1" oninput="updateSpeed()">
+            <div class="fine-tune-btns">
+                <button class="fine-tune-btn" onclick="adjustSpeed(-0.01)">-0.01</button>
+                <button class="fine-tune-btn" onclick="adjustSpeed(-0.05)">-0.05</button>
+                <button class="fine-tune-btn" onclick="adjustSpeed(0.05)">+0.05</button>
+                <button class="fine-tune-btn" onclick="adjustSpeed(0.01)">+0.01</button>
             </div>
         </div>
-        
-        <div class="flex gap-3 mt-6">
-            <button onclick="saveSettings()" class="btn-touch bg-green-600 text-white flex-1 p-3">💾 Save Settings</button>
-            <button onclick="closeSettings()" class="btn-touch bg-gray-500 text-white flex-1 p-3">❌ Cancel</button>
+
+        <div class="setting-group">
+            <label>Pitch: <span id="pitchVal">1.00</span></label>
+            <input type="range" id="pitchSlider" min="0.1" max="3" step="0.01" value="1" oninput="updatePitch()">
+            <div class="fine-tune-btns">
+                <button class="fine-tune-btn" onclick="adjustPitch(-0.01)">-0.01</button>
+                <button class="fine-tune-btn" onclick="adjustPitch(-0.05)">-0.05</button>
+                <button class="fine-tune-btn" onclick="adjustPitch(0.05)">+0.05</button>
+                <button class="fine-tune-btn" onclick="adjustPitch(0.01)">+0.01</button>
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <label>Volume Boost: <span id="volVal">100%</span></label>
+            <input type="range" id="volumeSlider" min="10" max="400" step="1" value="100" oninput="updateVolume()">
+            <div class="fine-tune-btns">
+                <button class="fine-tune-btn" onclick="adjustVolume(-1)">-1%</button>
+                <button class="fine-tune-btn" onclick="adjustVolume(-10)">-10%</button>
+                <button class="fine-tune-btn" onclick="adjustVolume(10)">+10%</button>
+                <button class="fine-tune-btn" onclick="adjustVolume(1)">+1%</button>
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <label>Text Size: <span id="textSizeVal">Normal</span></label>
+            <input type="range" id="textSizeSlider" min="10" max="28" step="1" value="14" oninput="updateTextSize()">
+            <div class="fine-tune-btns">
+                <button class="fine-tune-btn" onclick="adjustTextSize(-1)">Smaller</button>
+                <button class="fine-tune-btn" onclick="adjustTextSize(1)">Larger</button>
+            </div>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin:8px 0;">
+            <label style="font-weight:600;font-size:0.85em;">Auto-Speak on Select</label>
+            <input type="checkbox" id="autoSpeakToggle" style="width:20px;height:20px;">
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin:8px 0;">
+            <label style="font-weight:600;font-size:0.85em;">Haptic Feedback</label>
+            <input type="checkbox" id="hapticToggle" checked style="width:20px;height:20px;">
+        </div>
+
+        <div class="modal-btns">
+            <button onclick="saveSettings()" style="background:var(--green);color:white;">💾 Save</button>
+            <button onclick="testVoice()" style="background:var(--accent);color:white;">🔊 Test</button>
+            <button onclick="closeSettings()" style="background:var(--bg3);color:var(--text);">Cancel</button>
         </div>
     </div>
 </div>
 
 <!-- Custom Phrase Modal -->
-<div id="customPhraseModal" class="modal-overlay" style="display: none;">
+<div id="customPhraseModal" class="modal-overlay" style="display:none;">
     <div class="modal">
-        <h2 class="text-2xl font-bold mb-4">✏️ Create Custom Phrase</h2>
-        <textarea id="customPhraseInput" class="w-full h-32 p-4 rounded-xl border-2 mb-4" 
-            style="background: var(--bg-secondary); color: var(--text-primary); border-color: var(--border);"
-            placeholder="Type your custom phrase..."></textarea>
-        
-        <label class="font-semibold block mb-2">Category</label>
-        <select id="customPhraseCategory" class="w-full p-3 rounded-xl border-2 mb-4"
-            style="background: var(--bg-secondary); color: var(--text-primary); border-color: var(--border);">
-            <option value="custom">Custom</option>
-            <option value="greetings">Greetings</option>
-            <option value="needs">Needs</option>
-            <option value="feelings">Feelings</option>
+        <h2>✏️ Create Custom Phrase</h2>
+        <textarea id="customPhraseInput" style="width:100%;height:80px;padding:10px;border-radius:8px;border:2px solid var(--border);background:var(--bg2);color:var(--text);resize:none;font-family:inherit;margin-bottom:8px;" placeholder="Type your phrase..."></textarea>
+        <select id="customCategory" style="width:100%;padding:8px;border-radius:8px;border:2px solid var(--border);background:var(--bg2);color:var(--text);margin-bottom:8px;">
+            <option value="greetings">Greetings</option><option value="needs">Needs</option><option value="feelings">Feelings</option>
+            <option value="questions">Questions</option><option value="medical">Medical</option><option value="social">Social</option>
         </select>
-        
-        <div class="flex gap-3">
-            <button onclick="saveCustomPhrase()" class="btn-touch bg-green-600 text-white flex-1 p-3">💾 Save Phrase</button>
-            <button onclick="closeCustomPhraseModal()" class="btn-touch bg-gray-500 text-white flex-1 p-3">❌ Cancel</button>
+        <div class="modal-btns">
+            <button onclick="saveCustomPhrase()" style="background:var(--green);color:white;">Save</button>
+            <button onclick="closeCustomPhraseModal()" style="background:var(--bg3);color:var(--text);">Cancel</button>
         </div>
     </div>
 </div>
 
 <script>
-// ==================== GLOBAL STATE ====================
-const APP_STATE = {
-    selectedVoice: 'F1',
-    selectedCategory: 'greetings',
+// ============ STATE ============
+const S = {
+    voiceEngine: 'browser', // browser | supertonic | google
+    voice: null,
+    voiceName: 'Female 1',
     speed: 1.0,
     pitch: 1.0,
-    volume: 80,
+    volume: 100,
+    textSize: 14,
     autoSpeak: false,
     haptic: true,
-    darkMode: false,
-    highContrast: false,
-    textSize: 'normal',
-    conversationMode: false,
+    dark: false,
+    contrast: false,
     apiKey: '',
+    category: 'greetings',
     history: [],
-    favorites: [],
+    favorites: new Set(),
     customPhrases: [],
-    showingFavorites: false
+    showFavorites: false,
+    supertonicReady: false,
+    audioCtx: null,
+    gainNode: null
 };
 
-// ==================== PHRASE DATABASE ====================
+const CATEGORIES = ['greetings','needs','feelings','questions','medical','social'];
 const PHRASES = {
-    greetings: [
-        "Hello, how are you?",
-        "Good morning",
-        "Good afternoon",
-        "Good evening",
-        "Nice to see you",
-        "How have you been?",
-        "It's been a while",
-        "Welcome"
-    ],
-    needs: [
-        "I need water please",
-        "I'm hungry",
-        "I need to use the bathroom",
-        "Can you help me adjust my position?",
-        "I'm too hot",
-        "I'm too cold",
-        "I need my medication",
-        "Can you turn on the TV?",
-        "I'd like to go outside",
-        "I need to rest now"
-    ],
-    feelings: [
-        "I'm feeling good today",
-        "I'm tired",
-        "I'm in pain",
-        "I'm feeling anxious",
-        "I'm happy",
-        "I'm sad",
-        "I'm frustrated",
-        "I'm bored",
-        "I'm comfortable",
-        "I'm uncomfortable"
-    ],
-    questions: [
-        "What time is it?",
-        "What day is it?",
-        "Can you repeat that?",
-        "Can you explain that?",
-        "Who is coming today?",
-        "When is my appointment?",
-        "Can I have some privacy?",
-        "Where are we going?",
-        "How long will it take?",
-        "Is my family coming?"
-    ],
-    medical: [
-        "I need my medication",
-        "My pain level is high",
-        "I'm having trouble breathing",
-        "I need to see a doctor",
-        "Can you check my blood pressure?",
-        "I feel dizzy",
-        "I need physical therapy",
-        "When is my next treatment?",
-        "I need my oxygen checked",
-        "Please contact my doctor"
-    ],
-    social: [
-        "Tell me about your day",
-        "I appreciate your help",
-        "That's interesting",
-        "I agree",
-        "I disagree",
-        "Let's watch a movie",
-        "Can you read to me?",
-        "I'd like to make a phone call",
-        "Can we listen to music?",
-        "Thank you for everything"
-    ]
+    greetings: ["Hello, how are you?","Good morning","Good afternoon","Good evening","Nice to see you","How have you been?","It's been a while","Welcome"],
+    needs: ["I need water please","I'm hungry","I need to use the bathroom","Can you help me adjust?","I'm too hot","I'm too cold","I need my medication","Turn on the TV please","I'd like to go outside","I need to rest"],
+    feelings: ["I'm feeling good","I'm tired","I'm in pain","I'm anxious","I'm happy","I'm sad","I'm frustrated","I'm bored","I'm comfortable","I'm uncomfortable"],
+    questions: ["What time is it?","What day is it?","Can you repeat that?","Can you explain?","Who is coming today?","When is my appointment?","Can I have privacy?","Where are we going?","How long will it take?","Is family coming?"],
+    medical: ["I need medication","Pain level is high","Trouble breathing","Need to see doctor","Check blood pressure","I feel dizzy","Need physical therapy","When is next treatment?","Check my oxygen","Contact my doctor"],
+    social: ["Tell me about your day","I appreciate your help","That's interesting","I agree","I disagree","Let's watch a movie","Can you read to me?","I'd like to call someone","Let's listen to music","Thank you for everything"]
 };
 
-// ==================== INITIALIZATION ====================
-function initApp() {
-    loadSettings();
-    loadHistory();
-    loadFavorites();
-    loadCustomPhrases();
-    updateTheme();
-    updateTextSize();
-    loadPhrases(APP_STATE.selectedCategory);
+const QUICK_WORDS = ['I','want','need','feel','please','thank you','yes','no','maybe','water','help','rest','now'];
+
+// ============ INIT ============
+function init() {
+    loadAll();
+    applyTheme();
+    applyTextSize();
+    buildCategoryBar();
+    loadPhrases();
+    buildQuickWords();
     renderHistory();
-    updateStatus('🟢 System Ready');
+    populateVoiceList();
+    document.getElementById('textInput').addEventListener('input', onTextInput);
+    document.getElementById('textInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); speakCurrent(); }
+    });
+    updateStatus('🟢 Ready');
 }
 
-// ==================== LOCAL STORAGE ====================
-function loadSettings() {
+function loadAll() {
     try {
-        const saved = JSON.parse(localStorage.getItem('aac_settings'));
-        if (saved) {
-            APP_STATE.apiKey = saved.apiKey || '';
-            APP_STATE.selectedVoice = saved.voice || 'F1';
-            APP_STATE.speed = saved.speed || 1.0;
-            APP_STATE.pitch = saved.pitch || 1.0;
-            APP_STATE.volume = saved.volume || 80;
-            APP_STATE.autoSpeak = saved.autoSpeak || false;
-            APP_STATE.haptic = saved.haptic !== false;
-            APP_STATE.darkMode = saved.darkMode || false;
-            APP_STATE.highContrast = saved.highContrast || false;
-            APP_STATE.textSize = saved.textSize || 'normal';
-            APP_STATE.conversationMode = saved.conversationMode || false;
-        }
-    } catch(e) {
-        console.error('Error loading settings:', e);
-    }
-    
-    // Apply loaded settings to UI
-    document.getElementById('apiKeyInput').value = APP_STATE.apiKey;
-    document.getElementById('speedSlider').value = APP_STATE.speed;
-    document.getElementById('pitchSlider').value = APP_STATE.pitch;
-    document.getElementById('volumeSlider').value = APP_STATE.volume;
-    document.getElementById('autoSpeakToggle').checked = APP_STATE.autoSpeak;
-    document.getElementById('hapticToggle').checked = APP_STATE.haptic;
-    document.getElementById('textSizeSelect').value = APP_STATE.textSize;
-    
-    updateSpeedDisplay();
-    updatePitchDisplay();
-    updateVolumeDisplay();
-    updateVoiceSelection();
-    updateConversationButton();
+        const d = JSON.parse(localStorage.getItem('aac_state') || '{}');
+        S.voiceEngine = d.voiceEngine || 'browser';
+        S.speed = d.speed ?? 1.0;
+        S.pitch = d.pitch ?? 1.0;
+        S.volume = d.volume ?? 100;
+        S.textSize = d.textSize ?? 14;
+        S.autoSpeak = d.autoSpeak || false;
+        S.haptic = d.haptic !== false;
+        S.dark = d.dark || false;
+        S.contrast = d.contrast || false;
+        S.apiKey = d.apiKey || '';
+        S.customPhrases = d.customPhrases || [];
+        S.history = d.history || [];
+        S.favorites = new Set(d.favorites || []);
+        S.voiceName = d.voiceName || 'Female 1';
+    } catch(e) {}
 }
 
-function saveSettings() {
-    APP_STATE.apiKey = document.getElementById('apiKeyInput').value.trim();
-    APP_STATE.autoSpeak = document.getElementById('autoSpeakToggle').checked;
-    APP_STATE.haptic = document.getElementById('hapticToggle').checked;
-    APP_STATE.textSize = document.getElementById('textSizeSelect').value;
-    
-    updateTextSize();
-    persistAll();
-    closeSettings();
-    showToast('Settings saved! ✅');
-}
-
-function persistAll() {
-    localStorage.setItem('aac_settings', JSON.stringify({
-        apiKey: APP_STATE.apiKey,
-        voice: APP_STATE.selectedVoice,
-        speed: APP_STATE.speed,
-        pitch: APP_STATE.pitch,
-        volume: APP_STATE.volume,
-        autoSpeak: APP_STATE.autoSpeak,
-        haptic: APP_STATE.haptic,
-        darkMode: APP_STATE.darkMode,
-        highContrast: APP_STATE.highContrast,
-        textSize: APP_STATE.textSize,
-        conversationMode: APP_STATE.conversationMode
+function saveAll() {
+    localStorage.setItem('aac_state', JSON.stringify({
+        voiceEngine: S.voiceEngine,
+        speed: S.speed,
+        pitch: S.pitch,
+        volume: S.volume,
+        textSize: S.textSize,
+        autoSpeak: S.autoSpeak,
+        haptic: S.haptic,
+        dark: S.dark,
+        contrast: S.contrast,
+        apiKey: S.apiKey,
+        customPhrases: S.customPhrases,
+        history: S.history.slice(0, 200),
+        favorites: [...S.favorites],
+        voiceName: S.voiceName
     }));
-    localStorage.setItem('aac_history', JSON.stringify(APP_STATE.history));
-    localStorage.setItem('aac_favorites', JSON.stringify(APP_STATE.favorites));
-    localStorage.setItem('aac_custom_phrases', JSON.stringify(APP_STATE.customPhrases));
 }
 
-function loadHistory() {
-    try {
-        APP_STATE.history = JSON.parse(localStorage.getItem('aac_history')) || [];
-    } catch(e) {
-        APP_STATE.history = [];
-    }
-}
-
-function loadFavorites() {
-    try {
-        APP_STATE.favorites = JSON.parse(localStorage.getItem('aac_favorites')) || [];
-    } catch(e) {
-        APP_STATE.favorites = [];
-    }
-}
-
-function loadCustomPhrases() {
-    try {
-        APP_STATE.customPhrases = JSON.parse(localStorage.getItem('aac_custom_phrases')) || [];
-    } catch(e) {
-        APP_STATE.customPhrases = [];
-    }
-}
-
-// ==================== UI FUNCTIONS ====================
-function updateStatus(message) {
-    document.getElementById('statusBar').textContent = message;
-}
-
-function showToast(message) {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2500);
-}
-
-function triggerHaptic() {
-    if (APP_STATE.haptic && navigator.vibrate) {
-        navigator.vibrate(30);
-    }
-}
-
-// ==================== THEME FUNCTIONS ====================
-function toggleDarkMode() {
-    APP_STATE.darkMode = !APP_STATE.darkMode;
-    if (APP_STATE.darkMode) APP_STATE.highContrast = false;
-    updateTheme();
-    persistAll();
-}
-
-function toggleHighContrast() {
-    APP_STATE.highContrast = !APP_STATE.highContrast;
-    if (APP_STATE.highContrast) APP_STATE.darkMode = false;
-    updateTheme();
-    persistAll();
-}
-
-function updateTheme() {
+// ============ THEME ============
+function applyTheme() {
     document.body.className = '';
-    if (APP_STATE.darkMode) document.body.classList.add('dark');
-    if (APP_STATE.highContrast) document.body.classList.add('high-contrast');
+    if (S.dark) document.body.classList.add('dark');
+    if (S.contrast) document.body.classList.add('high-contrast');
+}
+
+function toggleDark() {
+    S.dark = !S.dark;
+    if (S.dark) S.contrast = false;
+    applyTheme();
+    saveAll();
+    haptic();
+}
+
+function toggleContrast() {
+    S.contrast = !S.contrast;
+    if (S.contrast) S.dark = false;
+    applyTheme();
+    saveAll();
+    haptic();
+}
+
+function applyTextSize() {
+    document.body.style.fontSize = S.textSize + 'px';
 }
 
 function updateTextSize() {
-    document.body.style.fontSize = 
-        APP_STATE.textSize === 'large' ? '1.2rem' : 
-        APP_STATE.textSize === 'xlarge' ? '1.4rem' : '1rem';
+    S.textSize = parseInt(document.getElementById('textSizeSlider').value);
+    document.getElementById('textSizeVal').textContent = S.textSize + 'px';
+    applyTextSize();
 }
 
-// ==================== SETTINGS MODAL ====================
+function adjustTextSize(d) {
+    S.textSize = Math.max(10, Math.min(28, S.textSize + d));
+    document.getElementById('textSizeSlider').value = S.textSize;
+    document.getElementById('textSizeVal').textContent = S.textSize + 'px';
+    applyTextSize();
+}
+
+// ============ AUDIO ============
+function getAudioCtx() {
+    if (!S.audioCtx) {
+        S.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        S.gainNode = S.audioCtx.createGain();
+        S.gainNode.connect(S.audioCtx.destination);
+    }
+    S.gainNode.gain.value = S.volume / 100;
+    return S.audioCtx;
+}
+
+// ============ SPEECH ============
+async function speak(text) {
+    if (!text.trim()) return;
+    
+    updateStatus('🔊 Speaking...');
+    haptic();
+    
+    // Add to history
+    S.history.unshift({ text, time: Date.now() });
+    if (S.history.length > 200) S.history.pop();
+    saveAll();
+    renderHistory();
+    
+    try {
+        if (S.voiceEngine === 'supertonic' && S.supertonicReady) {
+            await speakSupertonic(text);
+        } else if (S.voiceEngine === 'google') {
+            await speakGoogleTTS(text);
+        } else {
+            await speakBrowser(text);
+        }
+    } catch(e) {
+        console.error('Speech error:', e);
+        // Fallback to browser TTS
+        try { await speakBrowser(text); } catch(e2) {}
+    }
+    
+    updateStatus('🟢 Ready');
+}
+
+function speakBrowser(text) {
+    return new Promise((resolve, reject) => {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        const voices = window.speechSynthesis.getVoices();
+        
+        if (S.voice && voices.includes(S.voice)) {
+            u.voice = S.voice;
+        } else if (S.voiceName) {
+            const found = voices.find(v => v.name === S.voiceName);
+            if (found) u.voice = found;
+        }
+        
+        u.rate = S.speed;
+        u.pitch = S.pitch;
+        u.volume = Math.min(1, S.volume / 100);
+        u.onend = resolve;
+        u.onerror = reject;
+        window.speechSynthesis.speak(u);
+    });
+}
+
+async function speakGoogleTTS(text) {
+    if (!S.apiKey) throw new Error('API key required for Google TTS');
+    
+    const response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${S.apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            input: { text },
+            voice: { languageCode: 'en-US', name: 'en-US-Standard-D', ssmlGender: 'FEMALE' },
+            audioConfig: { audioEncoding: 'MP3', speakingRate: S.speed, pitch: S.pitch, volumeGainDb: 20 * Math.log10(S.volume / 100) }
+        })
+    });
+    
+    if (!response.ok) throw new Error('Google TTS failed');
+    
+    const data = await response.json();
+    const audio = new Audio('data:audio/mp3;base64,' + data.audioContent);
+    const ctx = getAudioCtx();
+    const source = ctx.createMediaElementSource(audio);
+    source.connect(S.gainNode);
+    audio.play();
+    return new Promise(resolve => audio.onended = resolve);
+}
+
+async function speakSupertonic(text) {
+    // Supertonic requires WebGPU and the transformers library
+    if (!navigator.gpu) throw new Error('WebGPU not supported');
+    
+    // Dynamic import of transformers
+    const { pipeline } = await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1');
+    const tts = await pipeline('text-to-speech', 'onnx-community/Supertonic-TTS-ONNX', { 
+        quantized: true, 
+        device: 'webgpu' 
+    });
+    
+    const output = await tts(text, {
+        speaker_embeddings: `https://huggingface.co/onnx-community/Supertonic-TTS-ONNX/resolve/main/voices/F1.bin`,
+        num_inference_steps: 8,
+        speed: S.speed
+    });
+    
+    const blob = new Blob([output.audio], { type: 'audio/wav' });
+    const audio = new Audio(URL.createObjectURL(blob));
+    const ctx = getAudioCtx();
+    const source = ctx.createMediaElementSource(audio);
+    source.connect(S.gainNode);
+    audio.play();
+    return new Promise(resolve => audio.onended = resolve);
+}
+
+function speakCurrent() {
+    const text = document.getElementById('textInput').value.trim();
+    if (text) {
+        speak(text);
+        document.getElementById('textInput').value = '';
+    } else {
+        toast('Type or select text first');
+    }
+}
+
+function testVoice() {
+    speak('Hello, this is a voice test. How does this sound?');
+    closeSettings();
+}
+
+// ============ VOICE ENGINE ============
+function setEngine(engine) {
+    S.voiceEngine = engine;
+    document.querySelectorAll('.voice-engine-option').forEach(el => {
+        el.classList.toggle('active', el.dataset.engine === engine);
+    });
+    populateVoiceList();
+    saveAll();
+    
+    if (engine === 'supertonic') initSupertonic();
+}
+
+async function initSupertonic() {
+    updateStatus('Loading Supertonic...');
+    try {
+        if (!navigator.gpu) throw new Error('WebGPU not available');
+        const { pipeline } = await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1');
+        await pipeline('text-to-speech', 'onnx-community/Supertonic-TTS-ONNX', { quantized: true, device: 'webgpu' });
+        S.supertonicReady = true;
+        updateStatus('✅ Supertonic ready');
+    } catch(e) {
+        S.supertonicReady = false;
+        updateStatus('⚠️ Supertonic unavailable');
+        toast('Supertonic requires WebGPU. Using browser TTS.');
+    }
+}
+
+function populateVoiceList() {
+    const sel = document.getElementById('voiceSelect');
+    sel.innerHTML = '';
+    
+    if (S.voiceEngine === 'supertonic') {
+        ['F1 - Female','F2 - Female 2','M1 - Male'].forEach((v, i) => {
+            const opt = document.createElement('option');
+            opt.value = v;
+            opt.textContent = v;
+            if (S.voiceName === v) opt.selected = true;
+            sel.appendChild(opt);
+        });
+    } else if (S.voiceEngine === 'google') {
+        ['en-US-Standard-A (Male)','en-US-Standard-D (Male)','en-US-Standard-E (Female)','en-US-Standard-F (Female)','en-US-Wavenet-A','en-US-Wavenet-D'].forEach(v => {
+            const opt = document.createElement('option');
+            opt.value = v;
+            opt.textContent = v;
+            if (S.voiceName === v) opt.selected = true;
+            sel.appendChild(opt);
+        });
+    } else {
+        const voices = window.speechSynthesis.getVoices();
+        voices.forEach(v => {
+            const opt = document.createElement('option');
+            opt.value = v.name;
+            opt.textContent = `${v.name} (${v.lang})`;
+            if (S.voiceName === v.name) opt.selected = true;
+            sel.appendChild(opt);
+        });
+        if (voices.length === 0) {
+            setTimeout(populateVoiceList, 500);
+        }
+    }
+}
+
+function updateVoice() {
+    S.voiceName = document.getElementById('voiceSelect').value;
+    document.getElementById('voiceLabel').textContent = S.voiceName;
+    if (S.voiceEngine === 'browser') {
+        S.voice = window.speechSynthesis.getVoices().find(v => v.name === S.voiceName) || null;
+    }
+    saveAll();
+}
+
+// ============ SLIDERS ============
+function updateSpeed() {
+    S.speed = parseFloat(document.getElementById('speedSlider').value);
+    document.getElementById('speedVal').textContent = S.speed.toFixed(2) + 'x';
+    saveAll();
+}
+
+function adjustSpeed(d) {
+    S.speed = Math.max(0.25, Math.min(4, S.speed + d));
+    document.getElementById('speedSlider').value = S.speed;
+    document.getElementById('speedVal').textContent = S.speed.toFixed(2) + 'x';
+    saveAll();
+}
+
+function updatePitch() {
+    S.pitch = parseFloat(document.getElementById('pitchSlider').value);
+    document.getElementById('pitchVal').textContent = S.pitch.toFixed(2);
+    saveAll();
+}
+
+function adjustPitch(d) {
+    S.pitch = Math.max(0.1, Math.min(3, S.pitch + d));
+    document.getElementById('pitchSlider').value = S.pitch;
+    document.getElementById('pitchVal').textContent = S.pitch.toFixed(2);
+    saveAll();
+}
+
+function updateVolume() {
+    S.volume = parseInt(document.getElementById('volumeSlider').value);
+    document.getElementById('volVal').textContent = S.volume + '%';
+    if (S.gainNode) S.gainNode.gain.value = S.volume / 100;
+    saveAll();
+}
+
+function adjustVolume(d) {
+    S.volume = Math.max(10, Math.min(400, S.volume + d));
+    document.getElementById('volumeSlider').value = S.volume;
+    document.getElementById('volVal').textContent = S.volume + '%';
+    if (S.gainNode) S.gainNode.gain.value = S.volume / 100;
+    saveAll();
+}
+
+// ============ CATEGORIES & PHRASES ============
+function buildCategoryBar() {
+    const bar = document.getElementById('categoryBar');
+    bar.innerHTML = '';
+    CATEGORIES.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'category-btn' + (S.category === cat ? ' active' : '');
+        btn.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+        btn.onclick = () => selectCategory(cat);
+        bar.appendChild(btn);
+    });
+}
+
+function selectCategory(cat) {
+    S.category = cat;
+    buildCategoryBar();
+    loadPhrases();
+    haptic();
+}
+
+function loadPhrases() {
+    const list = document.getElementById('phrasesList');
+    list.innerHTML = '';
+    
+    let phrases = [...(PHRASES[S.category] || [])];
+    S.customPhrases.filter(p => p.category === S.category).forEach(p => phrases.push(p.text));
+    
+    phrases.forEach(text => {
+        const div = document.createElement('div');
+        div.className = 'phrase-item' + (S.favorites.has(text) ? ' favorite' : '');
+        div.innerHTML = `
+            <span class="phrase-text" onclick="selectPhrase('${esc(text)}')">${text}</span>
+            <button class="star-btn" onclick="event.stopPropagation();toggleFav('${esc(text)}')">${S.favorites.has(text) ? '⭐' : '☆'}</button>
+        `;
+        list.appendChild(div);
+    });
+}
+
+function selectPhrase(text) {
+    haptic();
+    if (S.autoSpeak) {
+        speak(text);
+    } else {
+        document.getElementById('textInput').value = text;
+        toast('Phrase loaded. Press SPEAK.');
+    }
+}
+
+function toggleFav(text) {
+    if (S.favorites.has(text)) {
+        S.favorites.delete(text);
+    } else {
+        S.favorites.add(text);
+    }
+    saveAll();
+    loadPhrases();
+    renderHistory();
+}
+
+// ============ QUICK WORDS ============
+function buildQuickWords() {
+    const div = document.getElementById('quickWords');
+    div.innerHTML = '';
+    QUICK_WORDS.forEach(w => {
+        const chip = document.createElement('span');
+        chip.className = 'word-chip';
+        chip.textContent = w;
+        chip.onclick = () => { 
+            const inp = document.getElementById('textInput');
+            inp.value = (inp.value + ' ' + w).trim();
+            inp.focus();
+            haptic();
+        };
+        div.appendChild(chip);
+    });
+}
+
+// ============ PREDICTIONS ============
+function onTextInput() {
+    const text = document.getElementById('textInput').value;
+    const last = text.split(' ').pop().toLowerCase();
+    const preds = document.getElementById('predictions');
+    preds.innerHTML = '';
+    
+    if (last.length < 2) return;
+    
+    const words = [...QUICK_WORDS, 'help','pain','please','now','later','better','worse','morning','night','food','drink','rest'];
+    const matches = words.filter(w => w.startsWith(last) && w !== last).slice(0, 6);
+    
+    matches.forEach(w => {
+        const btn = document.createElement('button');
+        btn.className = 'pred-btn';
+        btn.textContent = w;
+        btn.onclick = () => {
+            const words2 = text.split(' ');
+            words2[words2.length - 1] = w;
+            document.getElementById('textInput').value = words2.join(' ') + ' ';
+            onTextInput();
+            haptic();
+        };
+        preds.appendChild(btn);
+    });
+}
+
+// ============ HISTORY ============
+function renderHistory() {
+    const list = document.getElementById('historyList');
+    list.innerHTML = '';
+    
+    const items = S.showFavorites ? S.history.filter(h => S.favorites.has(h.text)) : S.history;
+    
+    if (items.length === 0) {
+        list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text3);font-size:0.8em;">No history</div>';
+        return;
+    }
+    
+    items.forEach((item, i) => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        div.innerHTML = `
+            <span style="flex:1;min-width:0;word-break:break-word;" onclick="speak('${esc(item.text)}')">${item.text}</span>
+            <button class="star-btn" onclick="event.stopPropagation();toggleFav('${esc(item.text)}')">${S.favorites.has(item.text) ? '⭐' : '☆'}</button>
+            <button class="delete-btn" onclick="event.stopPropagation();deleteHistory(${i})">✕</button>
+        `;
+        list.appendChild(div);
+    });
+}
+
+function deleteHistory(i) {
+    S.history.splice(i, 1);
+    saveAll();
+    renderHistory();
+    haptic();
+}
+
+function clearHistory() {
+    S.history = [];
+    saveAll();
+    renderHistory();
+}
+
+function toggleFavorites() {
+    S.showFavorites = !S.showFavorites;
+    renderHistory();
+    toast(S.showFavorites ? 'Showing favorites' : 'Showing all');
+}
+
+// ============ AI ============
+async function getAISuggestions() {
+    if (!S.apiKey) {
+        toast('Set API key in Settings');
+        openSettings();
+        return;
+    }
+    
+    updateStatus('🤖 AI thinking...');
+    try {
+        const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${S.apiKey}` },
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: [{ role: 'user', content: 'Generate 6 short helpful phrases for someone with limited speech. Return only phrases separated by newlines.' }],
+                max_tokens: 200
+            })
+        });
+        const data = await res.json();
+        const phrases = data.choices[0].message.content.split('\n').filter(s => s.trim());
+        
+        // Show as temporary suggestions in the phrases panel
+        S.category = '_ai';
+        const list = document.getElementById('phrasesList');
+        list.innerHTML = '<div style="font-weight:700;padding:4px;color:var(--accent);">🤖 AI Suggestions:</div>';
+        phrases.forEach(t => {
+            const div = document.createElement('div');
+            div.className = 'phrase-item';
+            div.innerHTML = `<span class="phrase-text" onclick="selectPhrase('${esc(t)}')">${t}</span>`;
+            list.appendChild(div);
+        });
+        updateStatus('🤖 AI ready');
+    } catch(e) {
+        toast('AI unavailable. Using offline.');
+        // Fallback
+        const fallback = ['Can you help me please?','I need something','Thank you for your patience','I appreciate your help','Can we talk for a moment?','I have something to say'];
+        S.category = '_ai';
+        const list = document.getElementById('phrasesList');
+        list.innerHTML = '<div style="font-weight:700;padding:4px;">Offline Suggestions:</div>';
+        fallback.forEach(t => {
+            const div = document.createElement('div');
+            div.className = 'phrase-item';
+            div.innerHTML = `<span class="phrase-text" onclick="selectPhrase('${esc(t)}')">${t}</span>`;
+            list.appendChild(div);
+        });
+    }
+}
+
+// ============ MODALS ============
 function openSettings() {
     document.getElementById('settingsModal').style.display = 'flex';
-    document.getElementById('apiKeyInput').value = APP_STATE.apiKey;
-    document.getElementById('autoSpeakToggle').checked = APP_STATE.autoSpeak;
-    document.getElementById('hapticToggle').checked = APP_STATE.haptic;
-    document.getElementById('textSizeSelect').value = APP_STATE.textSize;
-    triggerHaptic();
+    document.getElementById('apiKeyInput').value = S.apiKey;
+    document.getElementById('speedSlider').value = S.speed;
+    document.getElementById('speedVal').textContent = S.speed.toFixed(2) + 'x';
+    document.getElementById('pitchSlider').value = S.pitch;
+    document.getElementById('pitchVal').textContent = S.pitch.toFixed(2);
+    document.getElementById('volumeSlider').value = S.volume;
+    document.getElementById('volVal').textContent = S.volume + '%';
+    document.getElementById('textSizeSlider').value = S.textSize;
+    document.getElementById('textSizeVal').textContent = S.textSize + 'px';
+    document.getElementById('autoSpeakToggle').checked = S.autoSpeak;
+    document.getElementById('hapticToggle').checked = S.haptic;
+    document.getElementById('voiceLabel').textContent = S.voiceName;
+    document.querySelectorAll('.voice-engine-option').forEach(el => {
+        el.classList.toggle('active', el.dataset.engine === S.voiceEngine);
+    });
+    populateVoiceList();
+    haptic();
 }
 
 function closeSettings() {
     document.getElementById('settingsModal').style.display = 'none';
 }
 
-// ==================== CUSTOM PHRASE MODAL ====================
+function saveSettings() {
+    S.apiKey = document.getElementById('apiKeyInput').value.trim();
+    S.autoSpeak = document.getElementById('autoSpeakToggle').checked;
+    S.haptic = document.getElementById('hapticToggle').checked;
+    saveAll();
+    closeSettings();
+    toast('Settings saved ✅');
+}
+
 function openCustomPhraseModal() {
     document.getElementById('customPhraseModal').style.display = 'flex';
-    triggerHaptic();
+    haptic();
 }
 
 function closeCustomPhraseModal() {
@@ -789,469 +1336,52 @@ function closeCustomPhraseModal() {
 }
 
 function saveCustomPhrase() {
-    const phrase = document.getElementById('customPhraseInput').value.trim();
-    const category = document.getElementById('customPhraseCategory').value;
-    
-    if (!phrase) {
-        showToast('Please enter a phrase');
-        return;
-    }
-    
-    APP_STATE.customPhrases.push({ text: phrase, category: category });
-    persistAll();
+    const text = document.getElementById('customPhraseInput').value.trim();
+    const cat = document.getElementById('customCategory').value;
+    if (!text) return;
+    S.customPhrases.push({ text, category: cat });
+    saveAll();
     closeCustomPhraseModal();
-    showToast('Custom phrase saved! ⭐');
-    
-    if (APP_STATE.selectedCategory === category) {
-        loadPhrases(category);
-    }
-}
-
-// ==================== PHRASE MANAGEMENT ====================
-function selectCategory(category) {
-    APP_STATE.selectedCategory = category;
-    document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    document.querySelector(`[data-category="${category}"]`).classList.add('active');
-    loadPhrases(category);
-    triggerHaptic();
-}
-
-function loadPhrases(category) {
-    const container = document.getElementById('phrasesContainer');
-    container.innerHTML = '';
-    
-    let phrases = PHRASES[category] || [];
-    
-    // Add custom phrases for this category
-    APP_STATE.customPhrases.forEach(cp => {
-        if (cp.category === category) phrases.push(cp.text);
-    });
-    
-    phrases.forEach(phrase => {
-        const isFavorite = APP_STATE.favorites.includes(phrase);
-        const div = document.createElement('div');
-        div.className = 'phrase-btn btn-touch' + (isFavorite ? ' favorite' : '');
-        div.innerHTML = `
-            <div class="flex justify-between items-center">
-                <span class="flex-1" onclick="selectPhrase('${escapeHTML(phrase)}')">${phrase}</span>
-                <span class="favorite-star" onclick="event.stopPropagation(); toggleFavorite('${escapeHTML(phrase)}')">
-                    ${isFavorite ? '⭐' : '☆'}
-                </span>
-            </div>
-        `;
-        container.appendChild(div);
-    });
-}
-
-function selectPhrase(phrase) {
-    triggerHaptic();
-    
-    if (APP_STATE.autoSpeak) {
-        speakPhrase(phrase);
-    } else {
-        document.getElementById('textInput').value = phrase;
-        showToast('Phrase loaded. Press SPEAK or modify it.');
-    }
-}
-
-function appendWord(word) {
-    const input = document.getElementById('textInput');
-    input.value = (input.value + ' ' + word).trim();
-    input.focus();
-    triggerHaptic();
+    if (S.category === cat) loadPhrases();
+    toast('Phrase saved! ⭐');
 }
 
 function clearText() {
     document.getElementById('textInput').value = '';
-    triggerHaptic();
+    document.getElementById('predictions').innerHTML = '';
 }
 
-// ==================== SPEECH FUNCTIONS ====================
-async function speakPhrase(text) {
-    if (!text) return;
-    
-    updateStatus(`🔊 Speaking...`);
-    triggerHaptic();
-    
-    // Add to history
-    APP_STATE.history.unshift({ text, timestamp: Date.now() });
-    if (APP_STATE.history.length > 100) APP_STATE.history.pop();
-    persistAll();
-    renderHistory();
-    
-    try {
-        // Try Web Speech API first (most reliable)
-        if ('speechSynthesis' in window) {
-            await speakWithBrowserTTS(text);
-        } else {
-            throw new Error('Speech synthesis not supported');
-        }
-    } catch (e) {
-        console.error('Speech error:', e);
-        updateStatus('⚠️ Speech failed. Please try again.');
-        showToast('Speech error. Try adjusting voice settings.');
-    }
-    
-    updateStatus('🟢 Ready');
+// ============ UTILS ============
+function esc(s) { return s.replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0'); }
+function haptic() { if (S.haptic && navigator.vibrate) navigator.vibrate(15); }
+function updateStatus(m) { document.getElementById('statusText').textContent = m; }
+
+function toast(msg) {
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2000);
 }
 
-function speakWithBrowserTTS(text) {
-    return new Promise((resolve, reject) => {
-        window.speechSynthesis.cancel();
-        
-        const utterance = new SpeechSynthesisUtterance(text);
-        const voices = window.speechSynthesis.getVoices();
-        
-        // Select voice based on preference
-        let selectedVoiceObj = null;
-        if (APP_STATE.selectedVoice === 'F1' || APP_STATE.selectedVoice === 'F2') {
-            selectedVoiceObj = voices.find(v => v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Karen')) || voices[0];
-        } else {
-            selectedVoiceObj = voices.find(v => v.name.includes('Male') || v.name.includes('Daniel') || v.name.includes('Tom')) || voices[0];
-        }
-        
-        if (selectedVoiceObj) utterance.voice = selectedVoiceObj;
-        utterance.rate = APP_STATE.speed;
-        utterance.pitch = APP_STATE.pitch;
-        utterance.volume = APP_STATE.volume / 100;
-        
-        utterance.onend = () => resolve();
-        utterance.onerror = (e) => reject(e);
-        
-        window.speechSynthesis.speak(utterance);
-    });
-}
-
-function speakCurrent() {
-    const text = document.getElementById('textInput').value.trim();
-    if (text) {
-        speakPhrase(text);
-        document.getElementById('textInput').value = '';
-    } else {
-        showToast('Please enter or select text first');
-    }
-}
-
-function testVoice() {
-    speakPhrase("Hello, this is a voice test. How does this sound?");
-}
-
-// ==================== VOICE SETTINGS ====================
-function selectVoice(voice) {
-    APP_STATE.selectedVoice = voice;
-    updateVoiceSelection();
-    persistAll();
-    triggerHaptic();
-    showToast(`Voice: ${voice} selected`);
-}
-
-function updateVoiceSelection() {
-    document.querySelectorAll('.voice-option').forEach(opt => {
-        opt.classList.remove('active');
-        if (opt.dataset.voice === APP_STATE.selectedVoice) {
-            opt.classList.add('active');
-        }
-    });
-}
-
-function updateSpeed() {
-    APP_STATE.speed = parseFloat(document.getElementById('speedSlider').value);
-    updateSpeedDisplay();
-    persistAll();
-}
-
-function updateSpeedDisplay() {
-    document.getElementById('speedValue').textContent = APP_STATE.speed.toFixed(1) + 'x';
-}
-
-function updatePitch() {
-    APP_STATE.pitch = parseFloat(document.getElementById('pitchSlider').value);
-    updatePitchDisplay();
-    persistAll();
-}
-
-function updatePitchDisplay() {
-    document.getElementById('pitchValue').textContent = APP_STATE.pitch.toFixed(1);
-}
-
-function updateVolume() {
-    APP_STATE.volume = parseInt(document.getElementById('volumeSlider').value);
-    updateVolumeDisplay();
-    persistAll();
-}
-
-function updateVolumeDisplay() {
-    document.getElementById('volumeValue').textContent = APP_STATE.volume + '%';
-}
-
-// ==================== HISTORY ====================
-function renderHistory() {
-    const container = document.getElementById('historyContainer');
-    container.innerHTML = '';
-    
-    const items = APP_STATE.showingFavorites ? 
-        APP_STATE.history.filter(h => APP_STATE.favorites.includes(h.text)) :
-        APP_STATE.history;
-    
-    if (items.length === 0) {
-        container.innerHTML = '<p class="text-center text-gray-500 p-4">No history yet</p>';
-        return;
-    }
-    
-    items.forEach((item, index) => {
-        const isFavorite = APP_STATE.favorites.includes(item.text);
-        const div = document.createElement('div');
-        div.className = 'history-item';
-        div.innerHTML = `
-            <span class="flex-1" onclick="speakPhrase('${escapeHTML(item.text)}')">${item.text}</span>
-            <div class="flex gap-2">
-                <span class="favorite-star" onclick="toggleFavorite('${escapeHTML(item.text)}')">
-                    ${isFavorite ? '⭐' : '☆'}
-                </span>
-                <span onclick="deleteHistoryItem(${index})" class="text-red-500 font-bold cursor-pointer p-1">✕</span>
-            </div>
-        `;
-        container.appendChild(div);
-    });
-}
-
-function clearHistory() {
-    if (confirm('Clear all history?')) {
-        APP_STATE.history = [];
-        persistAll();
-        renderHistory();
-        triggerHaptic();
-    }
-}
-
-function deleteHistoryItem(index) {
-    APP_STATE.history.splice(index, 1);
-    persistAll();
-    renderHistory();
-    triggerHaptic();
-}
-
-function showFavorites() {
-    APP_STATE.showingFavorites = !APP_STATE.showingFavorites;
-    renderHistory();
-    showToast(APP_STATE.showingFavorites ? 'Showing favorites ⭐' : 'Showing all history');
-}
-
-function toggleFavorite(phrase) {
-    const index = APP_STATE.favorites.indexOf(phrase);
-    if (index > -1) {
-        APP_STATE.favorites.splice(index, 1);
-    } else {
-        APP_STATE.favorites.push(phrase);
-    }
-    persistAll();
-    loadPhrases(APP_STATE.selectedCategory);
-    renderHistory();
-    triggerHaptic();
-}
-
-// ==================== PREDICTIVE TEXT ====================
-function onTextInput() {
-    const text = document.getElementById('textInput').value;
-    const lastWord = text.split(' ').pop();
-    
-    // Simple prediction based on common words
-    const predictions = getPredictions(lastWord);
-    const predBox = document.getElementById('predictionBox');
-    predBox.innerHTML = '';
-    
-    if (predictions.length > 0 && lastWord.length > 1) {
-        predictions.forEach(word => {
-            const btn = document.createElement('button');
-            btn.className = 'btn-touch bg-blue-100 dark:bg-blue-900 px-3 py-1 text-sm';
-            btn.textContent = word;
-            btn.onclick = () => {
-                const words = text.split(' ');
-                words[words.length - 1] = word;
-                document.getElementById('textInput').value = words.join(' ') + ' ';
-                onTextInput();
-                triggerHaptic();
-            };
-            predBox.appendChild(btn);
-        });
-    }
-}
-
-function getPredictions(partial) {
-    const commonWords = [
-        'I', 'you', 'he', 'she', 'we', 'they',
-        'want', 'need', 'feel', 'think', 'know',
-        'please', 'thank', 'sorry', 'excuse',
-        'water', 'food', 'help', 'pain', 'rest',
-        'yes', 'no', 'maybe', 'later', 'now',
-        'good', 'bad', 'better', 'worse',
-        'morning', 'afternoon', 'evening', 'night'
-    ];
-    
-    return commonWords.filter(w => 
-        w.toLowerCase().startsWith(partial.toLowerCase()) && 
-        w.toLowerCase() !== partial.toLowerCase()
-    ).slice(0, 5);
-}
-
-// ==================== AI SUGGESTIONS ====================
-async function getAISuggestions() {
-    if (!APP_STATE.apiKey) {
-        showToast('⚠️ Please set your DeepSeek API key in Settings');
-        openSettings();
-        return;
-    }
-    
-    updateStatus('🤖 Generating AI suggestions...');
-    const container = document.getElementById('aiSuggestions');
-    container.innerHTML = '<div class="text-center p-4"><span class="typing-indicator"></span><span class="typing-indicator"></span><span class="typing-indicator"></span></div>';
-    
-    try {
-        const suggestions = await callDeepSeekAPI();
-        container.innerHTML = '';
-        
-        suggestions.forEach(suggestion => {
-            const div = document.createElement('div');
-            div.className = 'phrase-btn btn-touch';
-            div.textContent = suggestion;
-            div.onclick = () => selectPhrase(suggestion);
-            container.appendChild(div);
-        });
-        
-        updateStatus('🤖 AI suggestions ready');
-    } catch (e) {
-        console.error('AI error:', e);
-        container.innerHTML = '<p class="text-red-500 p-4">AI suggestions unavailable. Using offline suggestions.</p>';
-        
-        // Fallback to offline suggestions
-        const offlineSuggestions = generateOfflineSuggestions();
-        container.innerHTML = '';
-        offlineSuggestions.forEach(s => {
-            const div = document.createElement('div');
-            div.className = 'phrase-btn btn-touch';
-            div.textContent = s;
-            div.onclick = () => selectPhrase(s);
-            container.appendChild(div);
-        });
-    }
-}
-
-async function callDeepSeekAPI() {
-    const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${APP_STATE.apiKey}`
-        },
-        body: JSON.stringify({
-            model: 'deepseek-chat',
-            messages: [{
-                role: 'user',
-                content: 'Generate 5 helpful, short phrases for someone with limited speech ability to communicate basic needs. Return only the phrases separated by newlines, no numbering.'
-            }],
-            max_tokens: 200
-        })
-    });
-    
-    if (!response.ok) throw new Error('API request failed');
-    
-    const data = await response.json();
-    return data.choices[0].message.content.split('\n').filter(s => s.trim());
-}
-
-function generateOfflineSuggestions() {
-    const timeBased = new Date().getHours() < 12 ? 
-        ['Good morning', 'I would like breakfast'] :
-        new Date().getHours() < 17 ?
-        ['Good afternoon', 'I would like lunch'] :
-        ['Good evening', 'I would like dinner'];
-    
-    return [
-        ...timeBased,
-        'I need some water please',
-        'Can you help me?',
-        'Thank you for your help'
-    ];
-}
-
-// ==================== CONVERSATION MODE ====================
-function toggleConversationMode() {
-    APP_STATE.conversationMode = !APP_STATE.conversationMode;
-    updateConversationButton();
-    persistAll();
-    triggerHaptic();
-    showToast(APP_STATE.conversationMode ? 'Conversation mode: ON 💭' : 'Conversation mode: OFF');
-}
-
-function updateConversationButton() {
-    const btn = document.getElementById('conversationBtn');
-    if (APP_STATE.conversationMode) {
-        btn.textContent = '💭 Conversation Mode: ON';
-        btn.classList.add('bg-green-600');
-        btn.classList.remove('bg-indigo-600');
-    } else {
-        btn.textContent = '💭 Conversation Mode: OFF';
-        btn.classList.remove('bg-green-600');
-        btn.classList.add('bg-indigo-600');
-    }
-}
-
-// ==================== UTILITY FUNCTIONS ====================
-function escapeHTML(str) {
-    return str.replace(/[&<>"']/g, function(m) {
-        return {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
-        }[m];
-    });
-}
-
-// ==================== INITIALIZATION ====================
-window.addEventListener('load', () => {
-    initApp();
-    
-    // Load voices for speech synthesis
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.getVoices();
-        window.speechSynthesis.onvoiceschanged = () => {
-            window.speechSynthesis.getVoices();
-        };
-    }
-    
-    // Auto-save settings periodically
-    setInterval(persistAll, 30000);
-    
-    // Speak welcome message after a short delay
-    setTimeout(() => {
-        if (APP_STATE.autoSpeak) {
-            speakPhrase('Communication system ready.');
-        }
-    }, 2000);
-});
-
-// Close modals when clicking outside
-window.addEventListener('click', (e) => {
+// Close modals on overlay click
+window.addEventListener('click', e => {
     if (e.target.classList.contains('modal-overlay')) {
         e.target.style.display = 'none';
     }
 });
 
-// Keyboard shortcuts
-window.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey && document.activeElement === document.getElementById('textInput')) {
-        e.preventDefault();
-        speakCurrent();
-    }
-    if (e.key === 'Escape') {
-        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
-    }
-});
-</script>
+// Load voices
+if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = () => {
+        if (S.voiceEngine === 'browser') populateVoiceList();
+    };
+}
 
+// Init
+window.addEventListener('load', init);
+window.addEventListener('beforeunload', saveAll);
+setInterval(saveAll, 30000);
+</script>
 </body>
 </html>
